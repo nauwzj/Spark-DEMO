@@ -1,0 +1,70 @@
+jupyter toree install --spark_opts='--master=spark://xwtec01:7077' --user  --spark_home=/home/xwtec/local/spark-2.01/
+
+
+jupyter toree install --spark_home=/home/xwtec/local/spark-1.6.0-bin-hadoop2.6/
+jupyter toree install --spark_home=/home/xwtec/local/spark-2.01/
+
+
+jupyter notebook --config=/home/xwtec/.ipython/profile_default/startup/00-first.py --no-browser --ip=192.168.85.138 &
+
+
+python test
+import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+x=np.linspace(0,20,1000)
+y1=np.sin(x)
+y2=np.cos(x)
+
+plt.plot(x,y1,'-b',label='sine')
+plt.plot(x,y2,'-r',label='cosine')
+plt.legend(loc='upper right')
+plt.ylim(-1.5,2.0)
+
+
+//toree 编译
+/home/xwtec/local/anaconda2/incubator-toree/dist/toree/bin
+
+
+//spark
+kernel.json
+
+{
+"display_name": "Spark 2.0.2 (Scala 2.10.4)",
+"lauguage_info": {"name": "scala"},
+"argv": [
+    //这里改成你自己的目录，就是上面的run.sh 的路径
+    "/home/xwtec/local/anaconda2/incubator-toree/dist/toree/bin/run.sh",
+    "--profile",
+    "{connection_file}"
+],
+"codemirror_mode": "scala",
+"env": {
+    "SPARK_OPTS": "--master=local[2] --driver-java-options=-Xms512M --driver-java-options=-Xms1024M --driver-java-options=-Dlog4j.logLevel=info",
+    "MAX_INTERPRETER_THREADS": "16",
+    "CAPTURE_STANDARD_OUT": "true",
+    "CAPTURE_STANDARD_ERR": "true",
+    "SEND_EMPTY_OUTPUT": "false",
+    //这里改成你自己的目录
+    "SPARK_HOME": "/home/xwtec/local/spark-2.01",
+    //这里改成你自己的目录
+    "PYTHONPATH": "/home/xwtec/local/spark-2.01/python:/home/xwtec/local/spark-2.01/python/lib/py4j-0.10.3-src.zip"
+}
+}
+
+
+jupyter toree install --spark_opts='--master=spark://localhost:7077' --user  --spark_home=/home/xwtec/local/spark-2.01
+
+
+jupyter notebook  --no-browser --ip=192.168.85.138 &
+
+
+start-thriftserver.sh  --master spark://localhost:7077
+
+--上传文件（整个目录及子目录迭代）到hdfs上
+hadoop fs -put /home/xwtec/local/spark-2.01/examples/ hdfs://xwtec01:9000/
+
+--启动pyspark
+nohup pyspark >> /home/xwtec/work/jupyter/spark_sample_001.log 2>&1 &
+--自动化杀pyspark主进程
